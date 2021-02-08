@@ -1,29 +1,21 @@
 package repository
 
 import (
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"solid-library-kata/internal/model"
 )
 
-func AddUser(user model.User) {
-	db, err := gorm.Open(sqlite.Open("/tmp/test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-	result := db.Create(&user)
+func (p *repo) AddUser(user model.User) {
+	result := p.DB.Create(&user)
 	if result.Error != nil {
-		panic(err)
+		panic(result.Error)
 	}
 }
 
-func UserExists(username string) bool {
+func (p *repo) UserExists(username string) bool {
 	var count int64
-	db, err := gorm.Open(sqlite.Open("/tmp/test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-	result := db.Table("users").Where("username = ?", username).Count(&count)
+
+	result := p.DB.Table("users").Where("username = ?", username).Count(&count)
 	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
 		panic(result.Error)
 	}
@@ -31,17 +23,13 @@ func UserExists(username string) bool {
 	return count > 0
 }
 
-func GetUser(userID string) model.User {
+func (p *repo) GetUser(userID string) model.User {
 	var user model.User
-	db, err := gorm.Open(sqlite.Open("/tmp/test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
 
-	result := db.Where("username = ?", userID).First(&user)
+	result := p.DB.Where("username = ?", userID).First(&user)
 
 	if result.Error != nil {
-		panic(err)
+		panic(result.Error)
 	}
 	return user
 }

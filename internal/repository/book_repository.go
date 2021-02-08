@@ -1,29 +1,21 @@
 package repository
 
 import (
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"solid-library-kata/internal/model"
 )
 
-func AddBook(b model.Book) {
-	db, err := gorm.Open(sqlite.Open("/tmp/test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-	result := db.Create(&b)
+func (p *repo) AddBook(b model.Book) {
+	result := p.DB.Create(&b)
 	if result.Error != nil {
-		panic(err)
+		panic(result.Error)
 	}
 }
 
-func GetBook(title string) model.Book {
+func (p *repo) GetBook(title string) model.Book {
 	var book model.Book
-	db, err := gorm.Open(sqlite.Open("/tmp/test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-	result := db.Where("title = ?", title).First(&book)
+
+	result := p.DB.Where("title = ?", title).First(&book)
 	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
 		panic(result.Error)
 	}
@@ -31,13 +23,10 @@ func GetBook(title string) model.Book {
 	return book
 }
 
-func BookExists(title string) bool {
+func (p *repo) BookExists(title string) bool {
 	var count int64
-	db, err := gorm.Open(sqlite.Open("/tmp/test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-	result := db.Table("books").Where("title = ?", title).Count(&count)
+
+	result := p.DB.Table("books").Where("title = ?", title).Count(&count)
 	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
 		panic(result.Error)
 	}
@@ -45,14 +34,10 @@ func BookExists(title string) bool {
 	return count > 0
 }
 
-func GetAllBooks() []model.Book {
+func (p *repo) GetAllBooks() []model.Book {
 	var books []model.Book
-	db, err := gorm.Open(sqlite.Open("/tmp/test.db"), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
 
-	result := db.Find(&books)
+	result := p.DB.Find(&books)
 
 	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
 		panic(result.Error)
@@ -60,6 +45,6 @@ func GetAllBooks() []model.Book {
 	return books
 }
 
-//func borrowBook(b model.Book) {
+//func (p *repo) borrowBook(b model.Book) {
 //
 //}

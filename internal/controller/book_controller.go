@@ -8,27 +8,27 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-func AddBookToLibrary(title string, author string, userID string) *tablewriter.Table {
-	user := repository.GetUser(userID)
+func AddBookToLibrary(repo repository.Repository, title string, author string, userID string) *tablewriter.Table {
+	user := repo.GetUser(userID)
 	if !user.IsAdmin() {
 		panic("user is not admin, not allowed")
 	}
 
-	if repository.BookExists(title) {
+	if repo.BookExists(title) {
 		panic("Book already exists")
 	}
 
-	repository.AddBook(model.Book{Title: title, AuthorName: author})
-	book := repository.GetBook(title)
+	repo.AddBook(model.Book{Title: title, AuthorName: author})
+	book := repo.GetBook(title)
 
 	return output.DisplayBook(book)
 }
 
-func ListBooks() *tablewriter.Table {
+func ListBooks(repo repository.Repository) *tablewriter.Table {
 	// Guests can see the content of the library
 	// So no user role check
 
-	books := repository.GetAllBooks()
+	books := repo.GetAllBooks()
 
 	return output.DisplayBooks(books)
 }

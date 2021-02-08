@@ -3,17 +3,18 @@ package cli
 import (
 	"solid-library-kata/internal/controller"
 	"solid-library-kata/internal/output"
+	"solid-library-kata/internal/repository"
 	"solid-library-kata/internal/util"
 )
 
-func DispatchCommand(f CommandFlags) {
+func DispatchCommand(repo repository.Repository, f CommandFlags) {
 	switch *f.Action {
 	case "list-books":
-		output.RenderOutput(controller.ListBooks())
+		output.RenderOutput(controller.ListBooks(repo))
 	case "add-book":
-		output.RenderOutput(controller.AddBookToLibrary(*f.Book, *f.Author, *f.User))
+		output.RenderOutput(controller.AddBookToLibrary(repo, *f.Book, *f.Author, *f.User))
 	case "add-user":
-		output.RenderOutput(controller.AddUser(*f.User, *f.Role))
+		output.RenderOutput(controller.AddUser(repo, *f.User, *f.Role))
 	case "init":
 		util.InitDB()
 	}

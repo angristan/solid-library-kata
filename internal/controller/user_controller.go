@@ -7,15 +7,15 @@ import (
 	"solid-library-kata/internal/repository"
 )
 
-func AddUser(userName string, roleName string) *tablewriter.Table {
-	if repository.UserExists(userName) {
+func AddUser(repo repository.Repository, userName string, roleName string) *tablewriter.Table {
+	if repo.UserExists(userName) {
 		panic("user already exists")
 	}
 
 	role := model.GetRole(roleName)
 	user := model.User{Username: userName, Role: role}
 
-	repository.AddUser(user)
+	repo.AddUser(user)
 
 	return output.DisplayUser(user)
 }
