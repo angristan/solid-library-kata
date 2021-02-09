@@ -15,6 +15,8 @@ func DispatchCommand(repo repository.Repository, f CommandFlags) {
 		output.RenderOutput(controller.AddBookToLibrary(repo, *f.Book, *f.Author, *f.User))
 	case "add-user":
 		output.RenderOutput(controller.AddUser(repo, *f.User, *f.Role))
+	case "borrow-book":
+		output.RenderOutput(controller.BorrowBook(repo, *f.Book, *f.User))
 	case "init":
 		util.InitDB()
 	}

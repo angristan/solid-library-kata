@@ -4,6 +4,7 @@ import (
 	"solid-library-kata/internal/model"
 	"solid-library-kata/internal/output"
 	"solid-library-kata/internal/repository"
+	"time"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -31,4 +32,24 @@ func ListBooks(repo repository.Repository) *tablewriter.Table {
 	books := repo.GetAllBooks()
 
 	return output.DisplayBooks(books)
+}
+
+func BorrowBook(repo repository.Repository, bookTitle string, userName string) *tablewriter.Table {
+	book := repo.GetBook(bookTitle)
+	user := repo.GetUser(userName)
+	borrowedBooks := repo.GetBorrowedBooks(user)
+
+	if len(borrowedBooks) >= 3 {
+		panic("You can't borrow more than 3 books")
+	}
+
+	for _, book := range borrowedBooks {
+		if book.BorrowedAt.Before(time.Now().Add(4 * 7 * 24 * time.Hour)) {
+			panic("You already have a book due: " + book.Title)
+		}
+	}
+
+	book = repo.BorrowBook(book, user)
+
+	return output.DisplayBook(book)
 }

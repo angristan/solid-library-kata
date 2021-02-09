@@ -3,6 +3,7 @@ package repository
 import (
 	"gorm.io/gorm"
 	"solid-library-kata/internal/model"
+	"time"
 )
 
 func (p *repo) AddBook(b model.Book) {
@@ -45,6 +46,10 @@ func (p *repo) GetAllBooks() []model.Book {
 	return books
 }
 
-//func (p *repo) borrowBook(b model.Book) {
-//
-//}
+func (p *repo) BorrowBook(b model.Book, u model.User) model.Book {
+	b.BorrowedAt = time.Now()
+	b.BorrowerUserID = u.ID
+	p.DB.Save(&b)
+
+	return b
+}

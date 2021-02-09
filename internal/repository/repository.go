@@ -13,6 +13,8 @@ type Repository interface {
 	AddUser(user model.User)
 	UserExists(username string) bool
 	GetUser(userID string) model.User
+	BorrowBook(b model.Book, u model.User) model.Book
+	GetBorrowedBooks(user model.User) []model.Book
 }
 
 type repo struct {

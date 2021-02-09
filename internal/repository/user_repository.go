@@ -13,14 +13,12 @@ func (p *repo) AddUser(user model.User) {
 }
 
 func (p *repo) UserExists(username string) bool {
-	var count int64
-
-	result := p.DB.Table("users").Where("username = ?", username).Count(&count)
+	result := p.DB.Table("users").Where("username = ?", username)
 	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
 		panic(result.Error)
 	}
 
-	return count > 0
+	return result.RowsAffected > 0
 }
 
 func (p *repo) GetUser(userID string) model.User {
@@ -32,4 +30,13 @@ func (p *repo) GetUser(userID string) model.User {
 		panic(result.Error)
 	}
 	return user
+}
+
+func (p *repo) GetBorrowedBooks(user model.User) []model.Book {
+	var books []model.Book
+	result := p.DB.Table("books").Find(&books, "borrower_user_id = ?", user.ID)
+	if result.Error != nil {
+		panic(result.Error)
+	}
+	return books
 }
