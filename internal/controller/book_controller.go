@@ -53,3 +53,10 @@ func BorrowBook(repo repository.Repository, bookTitle string, userName string) *
 
 	return output.DisplayBook(book)
 }
+
+func GetBorrowedBooks(repo repository.Repository, userName string) *tablewriter.Table {
+	user := repo.GetUser(userName)
+	borrowedBooks := repo.GetBorrowedBooks(user)
+
+	return output.DisplayBooks(borrowedBooks)
+}

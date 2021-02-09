@@ -10,6 +10,6 @@ type Book struct {
 	ID             uint `gorm:"primaryKey"`
 	Title          string
 	AuthorName     string
-	BorrowerUserID uint `gorm:"DEFAULT:NULL"`
+	BorrowerUserID uint
 	BorrowedAt     time.Time
 }

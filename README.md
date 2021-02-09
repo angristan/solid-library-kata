@@ -25,7 +25,91 @@ Technical notes:
 
 Design notes:
 
-- the application should be very simple in terms of user interface (ie: an
-  app console is good enough for this test) but internally well designed.
+- the application should be very simple in terms of user interface (ie: an app console is good enough for this test) but
+  internally well designed.
 - ask questions to check if there is hidden rules
 - define your main use cases and find 2-3 exemples to illust
+
+---
+
+```
+Usage:
+  -action string
+        action to do <list-books|add-book|add-user|borrow-book|get-borrowed-books|init
+  -author string
+        author of the book to add
+  -book string
+        book to add or borrow
+  -role string
+        role of the user to add
+  -user string
+        username of the user
+```
+
+```
+➜  solid-library-kata git:(master) ✗ go run cmd/cli/main.go -action add-user -user michou -role member
+member+----------+--------+
+| USERNAME |  ROLE  |
++----------+--------+
+| michou   | member |
++----------+--------+
+
+➜  solid-library-kata git:(master) ✗ go run cmd/cli/main.go -action list-books
++----------------------+------------+
+|        TITLE         | AUTHORNAME |
++----------------------+------------+
+| Software Engineering | Rui        |
++----------------------+------------+
+
+➜  solid-library-kata git:(master) ✗ go run cmd/cli/main.go -action add-book -book stonks -author elon -user stan
++--------+------------+
+| TITLE  | AUTHORNAME |
++--------+------------+
+| stonks | elon       |
++--------+------------+
+
+➜  solid-library-kata git:(master) ✗ go run cmd/cli/main.go -action list-books
++----------------------+------------+
+|        TITLE         | AUTHORNAME |
++----------------------+------------+
+| stonks               | elon       |
+| Software Engineering | Rui        |
++----------------------+------------+
+
+➜  solid-library-kata git:(master) ✗ go run cmd/cli/main.go -action borrow-book -book stonks -user michou
++--------+------------+
+| TITLE  | AUTHORNAME |
++--------+------------+
+| stonks | elon       |
++--------+------------+
+
+➜  solid-library-kata git:(master) ✗ go run cmd/cli/main.go -action get-borrowed-books -user michou
++--------+------------+
+| TITLE  | AUTHORNAME |
++--------+------------+
+| stonks | elon       |
++--------+------------+
+```
+
+```
+➜  solid-library-kata git:(master) ✗ go test -v ./...
+?       solid-library-kata/cmd/cli      [no test files]
+?       solid-library-kata/internal/cli [no test files]
+testing: warning: no tests to run
+PASS
+ok      solid-library-kata/internal/controller  (cached) [no tests to run]
+=== RUN   TestInit
+=== RUN   TestInit/TestGetUser
+--- PASS: TestInit (0.00s)
+    --- PASS: TestInit/TestGetUser (0.00s)
+PASS
+ok      solid-library-kata/internal/model       0.295s
+?       solid-library-kata/internal/output      [no test files]
+=== RUN   TestInit
+=== RUN   TestInit/TestGetUser
+--- PASS: TestInit (0.00s)
+    --- PASS: TestInit/TestGetUser (0.00s)
+PASS
+ok      solid-library-kata/internal/repository  0.463s
+?       solid-library-kata/internal/util        [no test files]
+```
