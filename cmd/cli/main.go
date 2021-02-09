@@ -2,8 +2,7 @@ package main
 
 import (
 	"flag"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	"github.com/jinzhu/gorm"
 	"solid-library-kata/internal/cli"
 	"solid-library-kata/internal/repository"
 )
@@ -17,7 +16,7 @@ func main() {
 	f.Role = flag.String("role", "", "action to do")
 	flag.Parse()
 
-	db, err := gorm.Open(sqlite.Open("/tmp/test.db"), &gorm.Config{})
+	db, err := gorm.Open("sqlite3", "/tmp/test.db")
 	if err != nil {
 		panic("failed to connect database")
 	}
